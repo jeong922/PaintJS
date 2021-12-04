@@ -5,6 +5,7 @@ const range = document.querySelector("#jsRange");
 const mode = document.querySelector("#jsMode");
 const saveBtn = document.querySelector("#jsSave");
 const clearBtn = document.querySelector("#jsClear");
+const colorPicker = document.querySelector("#color-picker");
 
 const INITIAL_COLOR = "2c2c2c";
 const CANVAS_SIZE = 700;
@@ -21,6 +22,7 @@ ctx.lineWidth = 2.5;
 
 let painting = false;
 let filling = false;
+let eraser = false;
 
 function stopPainting() {
 	painting = false;
@@ -46,12 +48,12 @@ function changeColorClick(event) {
 	const color = event.target.style.backgroundColor;
 	ctx.strokeStyle = color;
 	ctx.fillStyle = color;
-}
+} // 색 변경
 
 function handleRangeChange(event) {
 	const size = event.target.value;
 	ctx.lineWidth = size;
-}
+} // 선 굵기 변경
 
 function handleModeClick(event) {
 	if(filling === true) {
@@ -61,17 +63,17 @@ function handleModeClick(event) {
 		filling = true;
 		mode.innerText = "Paint";
 	}
-}
+} // 전체 채움, 브러시 모드 변경
 
 function handleCanvasClick() {
 	if(filling) {
 	ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 	}
-}
+} // 캔버스 전체 채움
 
 function handleContextMenu(event) {
 	event.preventDefault();
-}
+} // 마우스 오른쪽클릭 이벤트 막기
 
 function handleSaveClick() {
 	const image = canvas.toDataURL("image/png");
@@ -79,12 +81,17 @@ function handleSaveClick() {
 	link.href = image;
 	link.download = "🎨";
 	link.click();
-}
+} // 저장
 
-function handleCanvasClear(event) {
+function handleCanvasClear() {
 	ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-	ctx.beginPath();
-}
+} // 캔버스 초기화
+
+function handleColorPicker(event) {
+	const color = event.target.value;
+	ctx.strokeStyle = color;
+	ctx.fillStyle = color;
+} // 사용자가 원하는 색 선택 기능
 
 if(canvas) {
 	canvas.addEventListener("mousemove", onMouseMove);
@@ -93,7 +100,7 @@ if(canvas) {
 	canvas.addEventListener("mouseleave", stopPainting);
 	canvas.addEventListener("click", handleCanvasClick);
 	canvas.addEventListener("contextmenu", handleContextMenu);
-}
+} 
 
 if(colors) {
 	Array.from(colors).forEach(color => 
@@ -115,3 +122,8 @@ if(saveBtn) {
 if(clearBtn) {
 	clearBtn.addEventListener("click", handleCanvasClear);
 }
+
+if(colorPicker) {
+	colorPicker.addEventListener("input", handleColorPicker);
+}
+
